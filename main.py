@@ -3,7 +3,6 @@ import pandas as pd
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
 from sklearn.svm import SVC
-from sklearn.metrics import confusion_matrix
 
 
 def load_data(file_path):
@@ -65,16 +64,15 @@ if __name__ == "__main__":
     train_data = preprocess(train_data)
     test_data = preprocess(test_data)
 
-    Y_valid = test_data["salary"].to_numpy()
+    Y_test = test_data["salary"].to_numpy()
     del test_data['salary']
-
-    svm = SVC()
 
     Y_train = train_data["salary"].to_numpy()
     X_train = train_data.drop("salary", axis=1).to_numpy()
 
+    svm = SVC()
     svm.fit(X_train, Y_train)
     Y_pred = svm.predict(test_data.values)
 
-    f_measure_ = f1_score(Y_valid, Y_pred, average='micro')
+    f_measure_ = f1_score(Y_test, Y_pred, average='micro')
     print(f_measure_)
