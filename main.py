@@ -58,13 +58,6 @@ def preprocess(data):
     return data
 
 
-def calculate_F1_score(Y_true, Y_predicted):
-    tn, fp, fn, tp = confusion_matrix(Y_true, Y_predicted).ravel()
-    precision = tp / (tp + fp)
-    recall = tp / (tp + fn)
-    return 2 * (precision * recall) / (precision + recall)
-
-
 if __name__ == "__main__":
     train_data = load_data(sys.argv[1])
     test_data = load_data(sys.argv[2])
@@ -72,17 +65,16 @@ if __name__ == "__main__":
     train_data = preprocess(train_data)
     test_data = preprocess(test_data)
 
-    y_valid = test_data["salary"].to_numpy()
+    Y_valid = test_data["salary"].to_numpy()
     del test_data['salary']
 
     svm = SVC()
 
-    X_train = train_data.drop("salary", axis=1).to_numpy()
     Y_train = train_data["salary"].to_numpy()
-
+    X_train = train_data.drop("salary", axis=1).to_numpy()
 
     svm.fit(X_train, Y_train)
-    y_pred = svm.predict(test_data.values)
+    Y_pred = svm.predict(test_data.values)
 
-    f_measure_ = f1_score(y_valid, y_pred, average='micro')
+    f_measure_ = f1_score(Y_valid, Y_pred, average='micro')
     print(f_measure_)
